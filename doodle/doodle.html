@@ -1,0 +1,32 @@
+<head>
+    <title>Leaderboard</title>
+</head>
+<body>
+    <h1>Doodle</h1>
+	{{> doodleBoard}}
+	{{> addUserForm}}
+</body>
+
+<template name="doodleBoard">
+	<table style="width:100%">
+		<tr>
+			<th>Name</th>
+			<th>10:00-12:00</th>		
+			<th>14:00-16:00</th>
+		</tr>
+		{{#each user}}
+			<tr>
+				<td class="user {{selectedClass}}">{{name}}</td>
+				<td><input type="checkbox"></td>		
+				<td><input type="checkbox"></td>
+			</tr>
+		{{/each}}
+	</table>
+</template>
+
+<template name="addUserForm">
+    <form>
+        <input type="text" name="userName">
+        <input type="submit" value="Add user">
+    </form>
+</template>
