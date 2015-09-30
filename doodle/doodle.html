@@ -3,8 +3,8 @@
 </head>
 <body>
     <h1>Doodle</h1>
-	{{> doodleBoard}}
-	{{> addUserForm}}
+    {{> main}}
+
 </body>
 
 <template name="doodleBoard">
@@ -29,4 +29,34 @@
         <input type="text" name="userName">
         <input type="submit" value="Add user">
     </form>
+</template>
+
+<template name="initForm">
+    <form>
+    	<p>
+    		<span>Title: </span>
+        	<input type="text" name="eventName">
+        </p>
+        <p>
+    		<span>User name: </span>
+        	<input type="text" name="userName">
+        </p>
+        <p>
+    		<span>Dates: </span>
+			<input type="text" class="form-control" id="my-datepicker" name="dates">
+        </p>
+        <p>
+	        <input type="submit" value="Create event">
+    	</p>
+    </form>
+</template>
+
+
+<template name="main">
+	{{#if createdPoll}}
+		{{> doodleBoard}}
+		{{> addUserForm}}
+	{{else}}
+		{{> initForm}}
+	{{/if}}
 </template>
