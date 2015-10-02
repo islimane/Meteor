@@ -18,8 +18,17 @@ Router.route('/list/:_id', {
   name: 'listPage',
   template: 'listPage',
   data: function(){
+    var currentUser = Meteor.userId();
     var currentList = this.params._id;
-    return Lists.findOne({ _id: currentList });
+    return Lists.findOne({_id:currentList, createdBy:currentUser});
+  },
+  onBeforeAction: function(){
+    var currentUser = Meteor.userId();
+    if(currentUser){
+      this.next();
+    } else {
+      this.render("login");
+    }
   }
 });
 
@@ -170,7 +179,10 @@ if(Meteor.isClient){
         if(error){
           console.log(error.reason);
         } else {
-          Router.go("home");
+          var currentRoute = Router.current().route.getName();
+          if(currentRoute == "login"){
+            Router.go("home");
+          }
         }
       });
     }
