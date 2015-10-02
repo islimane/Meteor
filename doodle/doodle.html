@@ -4,21 +4,22 @@
 <body>
     <h1>Doodle</h1>
     {{> main}}
-
 </body>
 
 <template name="doodleBoard">
 	<table style="width:100%">
 		<tr>
 			<th>Name</th>
-			<th>10:00-12:00</th>		
-			<th>14:00-16:00</th>
+			{{#each date}}
+				<th>{{this}}</th>
+			{{/each}}
 		</tr>
 		{{#each user}}
 			<tr>
 				<td class="user {{selectedClass}}">{{name}}</td>
-				<td><input type="checkbox"></td>		
-				<td><input type="checkbox"></td>
+				{{#each date}}
+					<td><input type="checkbox"></td>
+				{{/each}}	
 			</tr>
 		{{/each}}
 	</table>
@@ -44,10 +45,14 @@
         <p>
     		<span>Dates: </span>
 			<input type="text" class="form-control" id="my-datepicker" name="dates">
+			<a id="dates" href="">
+			Select Hours
+			</a>
         </p>
         <p>
 	        <input type="submit" value="Create event">
     	</p>
+    	{{> UI.dynamic template=myTemplate}}
     </form>
 </template>
 
