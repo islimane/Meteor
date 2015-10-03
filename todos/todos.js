@@ -5,7 +5,8 @@
 */
 
 Router.configure({
-    layoutTemplate: 'main'
+    layoutTemplate: 'main',
+    loadingTemplate: 'loading'
 });
 
 Router.route('/register');
@@ -29,6 +30,14 @@ Router.route('/list/:_id', {
     } else {
       this.render("login");
     }
+  },
+  subscriptions: function(){
+    var currentList = this.params._id;
+    return Meteor.subscribe('todos', currentList)
+  },
+  waitOn: function(){
+    var currentList = this.params._id;
+    return Meteor.subscribe('todos', currentList);
   }
 });
 
@@ -45,7 +54,6 @@ Lists = new Meteor.Collection('lists');
 
 
 if(Meteor.isClient){
-    // client code goes here
   Template.todos.helpers({
     'todo': function(){
       var currentUser = Meteor.userId();
@@ -56,7 +64,6 @@ if(Meteor.isClient){
   });
 
   Template.addTodo.events({
-    /// events go here
     'submit form': function(event){
       event.preventDefault();
       var todoName = $('[name="todoName"]').val();
@@ -75,7 +82,6 @@ if(Meteor.isClient){
   });
 
   Template.todoItem.events({
-    // events go here
     'click .delete-todo': function(event){
       event.preventDefault();
       var documentId = this._id;
@@ -94,7 +100,6 @@ if(Meteor.isClient){
       }
     },
     'change [type=checkbox]': function(){
-      // code goes here
       var documentId = this._id;
       Todos.update({_id:documentId}, {$set:{completed:(!this.completed)}});
     }
@@ -111,7 +116,6 @@ if(Meteor.isClient){
   });
 
   Template.todosCount.helpers({
-      // helpers go here
       'totalTodos': function(){
         var currentList = this._id;
         return Todos.find({listId:currentList}).count();
@@ -142,6 +146,10 @@ if(Meteor.isClient){
       var currentUser = Meteor.userId();
       return Lists.find({createdBy:currentUser}, {sort:{name:1}});
     }
+  });
+
+  Template.lists.onCreated(function () {
+    this.subscribe('lists');
   });
 
   Template.navigation.events({
@@ -189,8 +197,8 @@ if(Meteor.isClient){
   });
 
   Template.register.onRendered(function(){
-    $('.register').validate({
-      var validator = submitHandler: function(event){
+    var validator = $('.register').validate({
+      submitHandler: function(event){
         var email = $('[name=email]').val();
         var password = $('[name=password]').val();
         Accounts.createUser({
@@ -264,5 +272,13 @@ if(Meteor.isClient){
 }
 
 if(Meteor.isServer){
-    // server code goes here
+  Meteor.publish('lists', function(){
+    var currentUser = this.userId;
+    return Lists.find({createdBy:currentUser});
+  });
+
+  Meteor.publish('todos', function(currentList){
+    var currentUser = this.userId;
+    return Todos.find({ createdBy: currentUser, listId: currentList })
+  });
 }
