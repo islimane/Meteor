@@ -44,15 +44,15 @@
         </p>
         <p>
     		<span>Dates: </span>
-			<input type="text" class="form-control" id="my-datepicker" name="dates">
-			<a id="dates" href="">
+			<input type="text" class="form-control" id="my-datepicker">
+			<a id="selectHours" href="">
 			Select Hours
 			</a>
         </p>
+        {{> hours}}
         <p>
 	        <input type="submit" value="Create event">
     	</p>
-    	{{> UI.dynamic template=myTemplate}}
     </form>
 </template>
 
@@ -64,4 +64,23 @@
 	{{else}}
 		{{> initForm}}
 	{{/if}}
+</template>
+
+<template name="hours">
+	<table style="width:100%">
+		<tr>
+			<th></th>
+			<th>Time 1</th>
+			<th>Time 2</th>
+			<th>Time 3</th>
+		</tr>
+		{{#each dateField}}
+		<tr>
+			<td class="date">{{this}}</td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+		{{/each}}
+	</table>
 </template>

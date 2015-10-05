@@ -5,8 +5,8 @@
 */
 
 Router.configure({
-    layoutTemplate: 'main',
-    loadingTemplate: 'loading'
+  layoutTemplate: 'main',
+  loadingTemplate: 'loading'
 });
 
 Router.route('/register');
