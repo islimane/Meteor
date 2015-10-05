@@ -1,5 +1,5 @@
 UsersList = new Mongo.Collection('users');
-EventFields = new Mongo.Collection('fileds');
+EventsList = new Mongo.Collection('fileds');
 DatesList = new Mongo.Collection('dates');
 dates = [];
 
@@ -24,7 +24,7 @@ var procForm = function(eventName, userName, dates){
       time: ""
     });
   });
-  EventFields.insert({
+  EventsList.insert({
     title: eventName,
     name: userName,
     dates: instants
@@ -38,7 +38,7 @@ if(Meteor.isClient){
       return UsersList.find({}, {sort: {score: -1, name: 1} });
     },
     'date': function(){
-      return EventFields.find().fetch()[0].dates;
+      return EventsList.find().fetch()[0].dates;
     }
   });
 
@@ -56,10 +56,10 @@ if(Meteor.isClient){
   Template.main.helpers({
     'createdPoll': function(){
       // Return false if the collection is not ready
-      if(EventFields.find().fetch().length>0)
-        if(EventFields.find().fetch()[0].dates.hours==='undefined')
+      if(EventsList.find().fetch().length>0)
+        if(EventsList.find().fetch()[0].dates.hours==='undefined')
           return false;
-      return EventFields.find().fetch();
+      return EventsList.find().fetch();
     }
   });
 
