@@ -22,12 +22,12 @@ if(Meteor.isClient){
   // this code only runs on the client
   Template.main.helpers({
     'createdEvent': function(){
-      console.log(EventsList.find().fetch().length>0);
-      if(EventsList.find().fetch())
+     // console.log(EventsList.find().fetch());
+      if(EventsList.find().fetch().count() > 0)
         console.log("OK");
       else
         console.log("ERROR");
-      return EventsList.find().fetch();
+      return EventsList.find().fetch().count() > 0;
     }
   });
 
