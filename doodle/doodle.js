@@ -1,5 +1,6 @@
+EventsList = new Mongo.Collection('polls');
 UsersList = new Mongo.Collection('users');
-EventsList = new Mongo.Collection('fileds');
+UsersSelectedDates = new Mongo.Collection('selectedDates');
 
 // this function return true if there is
 // an empty string in the array, otherwise
@@ -14,7 +15,7 @@ var thereIsAnEmptyString = function(strArr){
 var insertDate = function(day, time){
   var dayHtml = '<td class="day">' + day + '</td>';
   var timeHtml = '<td class="time">' + time + '</td>';
-  html = '<tr class="date">' + dayHtml + timeHtml + '</tr>'
+  var html = '<tr class="date">' + dayHtml + timeHtml + '</tr>'
   $(html).appendTo('#datesBoard');
 };
 
@@ -22,18 +23,13 @@ if(Meteor.isClient){
   // this code only runs on the client
   Template.main.helpers({
     'createdEvent': function(){
-     // console.log(EventsList.find().fetch());
-      if(EventsList.find().fetch().count() > 0)
-        console.log("OK");
-      else
-        console.log("ERROR");
-      return EventsList.find().fetch().count() > 0;
+      return EventsList.find().fetch().length;
     }
   });
 
-  Template.events.helpers({
-    'event': function(){
-      return EventsList.find();
+  Template.polls.helpers({
+    'poll': function(){
+      return EventsList.find().fetch();
     }
   });
 
@@ -42,19 +38,38 @@ if(Meteor.isClient){
       return UsersList.find({}, {sort: {score: -1, name: 1} });
     },
     'date': function(){
+      console.log(this._id);
       return EventsList.find().fetch()[0].dates;
     }
   });
+
+  Template.doodleBoard.events({
+    'click [type="checkbox"]': function(event){
+      console.log("CLICK");
+      console.log(this._id);
+    }
+  });
+  //
 
   Template.addUserForm.events({
     'submit form': function(event){
       event.preventDefault();
       var userNameVar = event.target.userName.value;
       console.log(userNameVar);
-      console.log("id: " + this._id);
+      var eventId = this._id;
+      console.log("id: " + eventId);
+      console.log(EventsList.findOne(eventId).dates);
       UsersList.insert({
-          name: userNameVar
+        name: userNameVar
       });
+      var dates = EventsList.findOne(eventId).dates;
+      for(i in dates){
+        UsersSelectedDates.insert({
+          userName: userNameVar,
+          pollId: eventId,
+          selected: false
+        });
+      };
     }
   });
 
@@ -82,7 +97,7 @@ if(Meteor.isClient){
       }else{
         EventsList.insert({
           title: eventName,
-          name: userName,
+          createdBy: userName,
           dates: dates
         });
       }
