@@ -1,6 +1,30 @@
-EventsList = new Mongo.Collection('polls');
+// ROUTING
+Router.route('/', {
+  name: 'home',
+  template: 'home'
+});
+Router.route('/register');
+Router.route('/pollForm');
+Router.route('/polls');
+
+Router.route('/poll/:_id', {
+  template: 'pollPage',
+    data: function(){
+      var currentPoll = this.params._id;
+      return PollsList.findOne({ _id: currentPoll});
+    }
+});
+
+
+Router.configure({
+    layoutTemplate: 'layout'
+});
+
+
+// MAIN APP
+
+PollsList = new Mongo.Collection('polls');
 UsersList = new Mongo.Collection('users');
-UsersSelectedDates = new Mongo.Collection('selectedDates');
 
 // this function return true if there is
 // an empty string in the array, otherwise
@@ -21,59 +45,55 @@ var insertDate = function(day, time){
 
 if(Meteor.isClient){
   // this code only runs on the client
-  Template.main.helpers({
-    'createdEvent': function(){
-      return EventsList.find().fetch().length;
-    }
-  });
-
   Template.polls.helpers({
     'poll': function(){
-      return EventsList.find().fetch();
+      return PollsList.find();
     }
   });
 
-  Template.doodleBoard.helpers({
+  Template.pollPage.helpers({
     'user': function(){
-      return UsersList.find({}, {sort: {score: -1, name: 1} });
+      console.log("ID: " + this._id);
+      console.log(UsersList.find({insertedIn: this._id}).fetch());
+      return UsersList.find({insertedIn: this._id});
     },
     'date': function(){
-      console.log(this._id);
-      return EventsList.find().fetch()[0].dates;
+      console.log("DATE ID:" +  this._id);
+      var currentPoll = '"' + this._id + '"';
+      return PollsList.find();
     }
   });
 
-  Template.doodleBoard.events({
-    'click [type="checkbox"]': function(event){
-      console.log("CLICK");
-      console.log(this._id);
-    }
-  });
-  //
-
-  Template.addUserForm.events({
-    'submit form': function(event){
+  Template.pollPage.events({
+    'click [type="submit"]': function(event){
       event.preventDefault();
-      var userNameVar = event.target.userName.value;
-      console.log(userNameVar);
-      var eventId = this._id;
-      console.log("id: " + eventId);
-      console.log(EventsList.findOne(eventId).dates);
-      UsersList.insert({
-        name: userNameVar
+      var userNameVar = $("#userName").val();
+      var selectedDates = [];
+      $(".dateCheckbox").each(function(index){
+        selectedDates.push($(this).is(':checked'));
+        $(this).attr('value', false)
       });
-      var dates = EventsList.findOne(eventId).dates;
-      for(i in dates){
-        UsersSelectedDates.insert({
-          userName: userNameVar,
-          pollId: eventId,
-          selected: false
-        });
-      };
+      console.log("selectedDates: " + selectedDates);
+      var pollId = this._id;
+      console.log("id: " + pollId);
+      UsersList.insert({
+        name: userNameVar,
+        dates: selectedDates,
+        insertedIn: pollId
+      });
+      // Reset form
+      $("#userName").val('');
     }
   });
 
-  Template.initForm.events({
+  Template.addUserForm.helpers({
+    'date': function(){
+      console.log(this._id);
+      return PollsList.find().fetch()[0].dates;
+    }
+  });
+
+  Template.pollForm.events({
     'submit form': function(event){
       event.preventDefault();
       var eventName = event.target.eventName.value;
@@ -95,13 +115,13 @@ if(Meteor.isClient){
         alert("You must select at least one day and time");
         return false;
       }else{
-        EventsList.insert({
+        PollsList.insert({
           title: eventName,
           createdBy: userName,
           dates: dates
         });
       }
-      
+      Router.go('polls');
     },
     'click #addDate': function(event){
       event.preventDefault();
@@ -116,7 +136,7 @@ if(Meteor.isClient){
    },
   });
 
-  Template.initForm.rendered=function() {
+  Template.pollForm.rendered=function() {
       $('#my-datepicker').datepicker({
         format: "dd/mm/yyyy"
       });

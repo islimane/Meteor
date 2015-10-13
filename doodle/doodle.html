@@ -1,20 +1,32 @@
-<head>
-    <title>Leaderboard</title>
-</head>
-<body>
+<template name="layout">
     <h1>Doodle</h1>
-    {{> main}}
-</body>
-
-<template name="main">
-	{{#if createdEvent}}
-		{{> polls}}
-	{{else}}
-		{{> initForm}}
-	{{/if}}
+    <hr />
+    {{> navigation}}
+    <hr />
+    {{> yield}}
+    <hr />
+    <p>
+    	Copyright &copy; Doodle, by Ismael Slimane Zubillaga.
+    </p>
 </template>
 
-<template name="initForm">
+<template name="navigation">
+    <ul>
+        <li><a href="{{pathFor route='home'}}">Home</a></li>
+        <li><a href="{{pathFor route='pollForm'}}">Create a new Poll</a></li>
+        <li><a href="{{pathFor route='polls'}}">Polls</a></li>
+    </ul>
+</template>
+
+<template name="home">
+    <p>Welcome to the Doodle application.</p>
+</template>
+
+<template name="register">
+    <h2>Register</h2>
+</template>
+
+<template name="pollForm">
     <form>
     	<p>
     		<span>Title: </span>
@@ -42,14 +54,18 @@
 </template>
 
 <template name="polls">
-	{{#each poll}}
-		<p>ID: {{_id}}</p>
-		{{> doodleBoard}}
-		{{> addUserForm}}
-	{{/each}}
+	<ul>
+        {{#each poll}}
+			<li>
+				<a href="/poll/{{_id}}">{{this.title}}</a>
+			</li>
+		{{/each}}
+    </ul>
 </template>
 
-<template name="doodleBoard">
+<template name="pollPage">
+    <h3>{{this.title}}</h3>
+	<h4>Created by: {{this.createdBy}}</h4>
 	<table style="width:100%">
 		<tr>
 			<th>Name</th>
@@ -60,20 +76,34 @@
 				</th>
 			{{/each}}
 		</tr>
-		{{#each user}}
+		<!--{{#each user}}
 			<tr>
 				<td class="user {{selectedClass}}">{{name}}</td>
-				{{#each date}}
-					<td><input type="checkbox">'{{this._id}}'</td>
+				{{#each this.dates}}
+					<td>
+						{{#if this}}
+							<span class="glyphicon glyphicon-thumbs-up"></span>
+						{{else}}
+							<span class="glyphicon glyphicon-thumbs-down"></span>
+						{{/if}}
+					</td>
 				{{/each}}	
 			</tr>
-		{{/each}}
+		{{/each}}-->
+		<tr>
+			{{> addUserForm}}
+		</tr>
 	</table>
+	<input type="submit" value="Add user">
 </template>
 
 <template name="addUserForm">
-    <form>
-        <input type="text" name="userName">
-        <input type="submit" value="Add user">
-    </form>
+    <td>
+    	<input type="text" name="userName" id="userName">
+    </td>
+	<!--{{#each date}}
+		<td>
+			<input type="checkbox" name="date" class="dateCheckbox">
+		</td>
+	{{/each}}-->
 </template>
