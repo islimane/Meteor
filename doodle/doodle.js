@@ -60,7 +60,8 @@ if(Meteor.isClient){
     'date': function(){
       console.log("DATE ID:" +  this._id);
       var currentPoll = '"' + this._id + '"';
-      return PollsList.find();
+      var poll = PollsList.findOne(currentPoll);
+      return poll && poll.dates;
     }
   });
 
@@ -83,13 +84,6 @@ if(Meteor.isClient){
       });
       // Reset form
       $("#userName").val('');
-    }
-  });
-
-  Template.addUserForm.helpers({
-    'date': function(){
-      console.log(this._id);
-      return PollsList.find().fetch()[0].dates;
     }
   });
 
