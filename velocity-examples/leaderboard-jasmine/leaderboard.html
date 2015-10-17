@@ -5,6 +5,7 @@
 <body>
   <div id="outer">
     {{> leaderboard}}
+    {{> addPlayerForm}}
   </div>
 </body>
 
@@ -18,8 +19,9 @@
   {{#if selected_name}}
   <div class="details">
     <div class="name">{{selected_name}}</div>
-    <input type="button" class="inc" value="Give 5 points" />
-    <input type="button" class="dec" value="Take 5 points" />
+    <input type="button" class="inc" value="Give 5 points" id="inc" />
+    <input type="button" class="dec" value="Take 5 points" id="dec" />
+    <input type="button" class="del" value="Remove Player" id="del" />
   </div>
   {{else}}
   <div class="none">Click a player to select</div>
@@ -31,5 +33,12 @@
     <span class="name">{{name}}</span>
     <span class="score">{{score}}</span>
   </div>
+</template>
+
+<template name="addPlayerForm">
+  <form>
+      <input type="text" name="playerName">
+      <input type="submit" value="Add Player">
+  </form>
 </template>
 

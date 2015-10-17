@@ -20,6 +20,19 @@ PlayersService = {
   penalizePlayer: function (playerId) {
     Players.update(playerId, {$inc: {score: -5}});
   },
+  removePlayer: function (playerId) {
+    Players.remove({_id:playerId});
+  },
+  addPlayer: function(event){
+    event.preventDefault();
+    var playerNameVar = event.target.playerName.value;
+    Players.insert({
+        name: playerNameVar,
+        score: 0,
+    });
+    // Empty the form field after submit
+    event.target.playerName.value = "";
+  },
   playersExist: function () {
     return Players.find().count() > 0;
   },
@@ -57,9 +70,17 @@ if (Meteor.isClient) {
     },
     'click input.dec': function () {
       PlayersService.penalizePlayer(Session.get("selected_player"));
+    },
+    'click input.del': function () {
+      PlayersService.removePlayer(Session.get("selected_player"));
     }
   });
 
+  Template.addPlayerForm.events({
+      'submit form': function(event){
+        PlayersService.addPlayer(event);
+      }
+  });
 
   Template.player.helpers({
     selected: function () {

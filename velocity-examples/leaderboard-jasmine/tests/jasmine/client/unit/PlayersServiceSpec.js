@@ -30,6 +30,22 @@ describe('PlayersService', function () {
       PlayersService.rewardPlayer(playerId);
       expect(Players.update.calls.argsFor(0)).toEqual([playerId, {$inc: {score: 5}}]);
     });
+
+    it('should take 5 points from the player score with the given id', function () {
+      var playerId = 1;
+      spyOn(Players, 'update');
+
+      PlayersService.penalizePlayer(playerId);
+      expect(Players.update.calls.argsFor(0)).toEqual([playerId, {$inc: {score: -5}}]);
+    });
+
+    it('should remove a player with the given id', function () {
+      var playerId = 1;
+      spyOn(Players, 'remove');
+
+      PlayersService.removePlayer(playerId);
+      expect(Players.remove.calls.argsFor(0)).toEqual([{_id:playerId}]);
+    });
   });
 
   describe('playersExist', function () {
