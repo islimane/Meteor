@@ -59,8 +59,18 @@ if(Meteor.isClient){
     },
     'date': function(){
       console.log("DATE ID:" +  this._id);
-      var currentPoll = '"' + this._id + '"';
+      var currentPoll = this._id;
       var poll = PollsList.findOne(currentPoll);
+      console.log("Poll:");
+      console.log(poll.dates);
+      return poll && poll.dates;
+    },
+    'datesSubmit': function(){
+      console.log("DATE ID:" +  this._id);
+      var currentPoll = this._id;
+      var poll = PollsList.findOne(currentPoll);
+      console.log("Poll:");
+      console.log(poll.dates);
       return poll && poll.dates;
     }
   });

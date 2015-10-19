@@ -71,17 +71,19 @@
 			<th>Name</th>
 			{{#each date}}
 				<th>
-					<!--<p>{{this.day}}</p>
-					<p>{{this.time}}</p>-->
-					date
+					<p>{{this.day}}</p>
+					<p>{{this.time}}</p>
 				</th>
 			{{/each}}
 		</tr>
-		<!--{{#each user}}
+		{{#each user}}
 			<tr>
-				<td class="user {{selectedClass}}">{{name}}</td>
-				{{#each this.dates}}
+				<td class="user {{selectedClass}}">
+					{{name}}
+				</td>
+				{{#each dates}}
 					<td>
+						hola
 						{{#if this}}
 							<span class="glyphicon glyphicon-thumbs-up"></span>
 						{{else}}
@@ -93,7 +95,7 @@
 		{{/each}}
 		<tr>
 			{{> addUserForm}}
-		</tr>-->
+		</tr>
 	</table>
 	<input type="submit" value="Add user">
 </template>
@@ -102,9 +104,9 @@
     <td>
     	<input type="text" name="userName" id="userName">
     </td>
-	<!--{{#each date}}
+	{{#each datesSubmit}}
 		<td>
 			<input type="checkbox" name="date" class="dateCheckbox">
 		</td>
-	{{/each}}-->
+	{{/each}}
 </template>
