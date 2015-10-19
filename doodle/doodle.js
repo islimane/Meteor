@@ -53,24 +53,19 @@ if(Meteor.isClient){
 
   Template.pollPage.helpers({
     'user': function(){
-      console.log("ID: " + this._id);
-      console.log(UsersList.find({insertedIn: this._id}).fetch());
       return UsersList.find({insertedIn: this._id});
     },
     'date': function(){
-      console.log("DATE ID:" +  this._id);
       var currentPoll = this._id;
       var poll = PollsList.findOne(currentPoll);
-      console.log("Poll:");
-      console.log(poll.dates);
       return poll && poll.dates;
-    },
+    }
+  });
+
+  Template.addUserForm.helpers({
     'datesSubmit': function(){
-      console.log("DATE ID:" +  this._id);
       var currentPoll = this._id;
       var poll = PollsList.findOne(currentPoll);
-      console.log("Poll:");
-      console.log(poll.dates);
       return poll && poll.dates;
     }
   });
@@ -84,9 +79,7 @@ if(Meteor.isClient){
         selectedDates.push($(this).is(':checked'));
         $(this).attr('value', false)
       });
-      console.log("selectedDates: " + selectedDates);
       var pollId = this._id;
-      console.log("id: " + pollId);
       UsersList.insert({
         name: userNameVar,
         dates: selectedDates,
@@ -108,11 +101,9 @@ if(Meteor.isClient){
       }
       var dates = [];
       $('.day').each(function(index, element){
-        //console.log("element: '" + $(this).text() + "'");
         dates.push({day: $(this).text()});
       });
       $('.time').each(function(index, element){
-        //console.log("element: '" + $(this).text() + "'");
         dates[index].time = $(this).text();
       });
       if(dates.length<=0){
