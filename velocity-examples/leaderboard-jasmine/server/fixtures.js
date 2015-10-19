@@ -7,6 +7,7 @@ if (process.env.IS_MIRROR) {
         email: 'pepe@gmail.com',
         password: '123456'
       });
+      console.log("*******************************");
       generateRandomPlayers();
       console.log('Finished loading default fixtures');
     },
@@ -39,17 +40,19 @@ if (process.env.IS_MIRROR) {
 }
 
 var generateRandomPlayers = function () {
-    var names = ["Ada Lovelace",
-                 "Grace Hopper",
-                 "Marie Curie",
-                 "Carl Friedrich Gauss",
-                 "Nikola Tesla",
-                 "Claude Shannon"];
-    var idPP = Accounts.findUserByEmail('pepe@gmail.com')._id;
-    for (var i = 0; i < names.length; i++) {
-      Players.insert({name: names[i], score: _randomScore(), createdBy: idPP});
-    }
-  };
-  var _randomScore = function () {
-    return Math.floor(Random.fraction() * 10) * 5;
-  };
+  var names = ["Ada Lovelace",
+               "Grace Hopper",
+               "Marie Curie",
+               "Carl Friedrich Gauss",
+               "Nikola Tesla",
+               "Claude Shannon",
+               "Ismael Slimane"];
+  var currentUserId = Meteor.userId();
+  for (var i = 0; i < names.length; i++) {
+    Players.insert({name: names[i], score: _randomScore()*10000, createdBy: currentUserId});
+    console.log("new player");
+  }
+};
+var _randomScore = function () {
+  return Math.floor(Random.fraction() * 10) * 5;
+};

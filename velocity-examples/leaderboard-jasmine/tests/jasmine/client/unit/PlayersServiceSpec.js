@@ -4,10 +4,11 @@ describe('PlayersService', function () {
   describe('getPlayerList', function () {
     it('should ask for the players in primarily in descending score order, then in alphabetical order and return them', function () {
       var result = {};
+      var currentUserId = 1;
       spyOn(Players, 'find').and.returnValue(result);
 
-      expect(PlayersService.getPlayerList()).toBe(result);
-      expect(Players.find.calls.argsFor(0)).toEqual([{}, {sort: {score: -1, name: 1}}]);
+      expect(PlayersService.getPlayerList(1)).toBe(result);
+      expect(Players.find.calls.argsFor(0)).toEqual([{createdBy: currentUserId}, {sort: {score: -1, name: 1}}]);
     });
   });
 

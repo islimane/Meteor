@@ -9,65 +9,71 @@ var unselectPlayer = function () {
   Session.set("selected_player", null);
 };
 
-describe("Selecting Grace Hopper", function () {
-  beforeEach(function (done) {
-    Meteor.autorun(function (c) {
-      var grace = Players.findOne({name: "Grace Hopper"});
-      if (grace) {
-        c.stop();
-        selectGraceHopper(done);
-      }
-    })
+
+describe("Test Leaderbord functionality", function () {
+
+  describe("Selecting Grace Hopper", function () {
+    beforeEach(function (done) {
+      Meteor.autorun(function (c) {
+        var grace = Players.findOne({name: "Grace Hopper"});
+        if (grace) {
+          c.stop();
+          selectGraceHopper(done);
+        }
+      })
+    });
+
+    it("should show Grace above the give points button", function () {
+      expect($("div.details > div.name").html()).toEqual("Grace Hopper");
+    });
+
+    it("should highlight Grace's name", function () {
+      var grace = $('span.name');
+      console.log(grace);
+      var parentDiv = $("span.name:contains(Grace Hopper)").parent();
+      expect(parentDiv.hasClass("selected")).toBe(true);
+    });
   });
 
-  it("should show Grace above the give points button", function () {
-    expect($("div.details > div.name").html()).toEqual("Grace Hopper");
+  describe("Point Assignment", function () {
+    beforeEach(function (done) {
+      selectGraceHopper(done);
+    });
+
+    it("should give a player 5 points when he is selected and the button is pressed", function () {
+      var graceInitialPoints = Players.findOne({name: "Grace Hopper"}).score;
+      $("#inc").click();
+      expect(Players.findOne({name: "Grace Hopper"}).score).toBe(graceInitialPoints + 5);
+    });
+
+    it("should take from player 5 points when he is selected and the button is pressed", function () {
+      var graceInitialPoints = Players.findOne({name: "Grace Hopper"}).score;
+      $("#dec").click();
+      expect(Players.findOne({name: "Grace Hopper"}).score).toBe(graceInitialPoints - 5);
+    });
   });
 
-  it("should highlight Grace's name", function () {
-    var parentDiv = $("span.name:contains(Grace Hopper)").parent();
-    expect(parentDiv.hasClass("selected")).toBe(true);
-  });
-});
-
-describe("Point Assignment", function () {
-  beforeEach(function (done) {
-    selectGraceHopper(done);
+  describe("Player Ordering", function () {
+    it("should result in a list where the first player has as many or more points than the second player", function () {
+      var players = PlayersService.getPlayerList().fetch();
+      expect(players[0].score >= players[1].score).toBe(true);
+    });
   });
 
-  it("should give a player 5 points when he is selected and the button is pressed", function () {
-    var graceInitialPoints = Players.findOne({name: "Grace Hopper"}).score;
-    $("#inc").click();
-    expect(Players.findOne({name: "Grace Hopper"}).score).toBe(graceInitialPoints + 5);
-  });
+  describe("Player management", function () {
+    beforeEach(function (done) {
+      Meteor.autorun(function (c) {
+        var grace = Players.findOne({name: "Grace Hopper"});
+        if (grace) {
+          c.stop();
+          selectGraceHopper(done);
+        }
+      })
+    });
 
-  it("should take from player 5 points when he is selected and the button is pressed", function () {
-    var graceInitialPoints = Players.findOne({name: "Grace Hopper"}).score;
-    $("#dec").click();
-    expect(Players.findOne({name: "Grace Hopper"}).score).toBe(graceInitialPoints - 5);
-  });
-});
-
-describe("Player Ordering", function () {
-  it("should result in a list where the first player has as many or more points than the second player", function () {
-    var players = PlayersService.getPlayerList().fetch();
-    expect(players[0].score >= players[1].score).toBe(true);
-  });
-});
-
-describe("Player management", function () {
-  beforeEach(function (done) {
-    Meteor.autorun(function (c) {
-      var grace = Players.findOne({name: "Grace Hopper"});
-      if (grace) {
-        c.stop();
-        selectGraceHopper(done);
-      }
-    })
-  });
-
-  it("should remove a player when he is selected and the button is pressed", function () {
-    $("#del").click();
-    expect(Players.findOne({name: "Grace Hopper"})).toBe(undefined);
+    it("should remove a player when he is selected and the button is pressed", function () {
+      $("#del").click();
+      expect(Players.findOne({name: "Grace Hopper"})).toBe(undefined);
+    });
   });
 });

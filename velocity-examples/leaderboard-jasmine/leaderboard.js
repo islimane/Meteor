@@ -8,8 +8,8 @@ Players = new Meteor.Collection("players");
  * @type {{}}
  */
 PlayersService = {
-  getPlayerList: function () {
-    return Players.find({}, {sort: {score: -1, name: 1}});
+  getPlayerList: function (currenUserId) {
+    return Players.find({createdBy: currenUserId}, {sort: {score: -1, name: 1}});
   },
   getPlayer: function (playerId) {
     return Players.findOne(playerId);
@@ -26,9 +26,11 @@ PlayersService = {
   addPlayer: function(event){
     event.preventDefault();
     var playerNameVar = event.target.playerName.value;
+    var currentUserId = Meteor.userId();
     Players.insert({
         name: playerNameVar,
         score: 0,
+        createdBy: currentUserId
     });
     // Empty the form field after submit
     event.target.playerName.value = "";
@@ -41,7 +43,8 @@ PlayersService = {
 if (Meteor.isClient) {
   Template.leaderboard.helpers({
     players: function () {
-      return PlayersService.getPlayerList();
+      var currentUserId = Meteor.userId();
+      return PlayersService.getPlayerList(currentUserId);
     },
 
     selected_name: function () {
