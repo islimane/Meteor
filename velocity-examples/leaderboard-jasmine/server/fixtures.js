@@ -1,4 +1,4 @@
-/*if (process.env.IS_MIRROR) {
+if (process.env.IS_MIRROR) {
   Meteor.methods({
     'loadFixtures': function(){
       console.log('Loading default fixtures');
@@ -7,6 +7,7 @@
         email: 'pepe@gmail.com',
         password: '123456'
       });
+      generateRandomPlayers();
       console.log('Finished loading default fixtures');
     },
     'clearDB': function(){
@@ -35,4 +36,20 @@
       console.log('Finished clearing');
     }
   }); 
-}*/
+}
+
+var generateRandomPlayers = function () {
+    var names = ["Ada Lovelace",
+                 "Grace Hopper",
+                 "Marie Curie",
+                 "Carl Friedrich Gauss",
+                 "Nikola Tesla",
+                 "Claude Shannon"];
+    var idPP = Accounts.findUserByEmail('pepe@gmail.com')._id;
+    for (var i = 0; i < names.length; i++) {
+      Players.insert({name: names[i], score: _randomScore(), createdBy: idPP});
+    }
+  };
+  var _randomScore = function () {
+    return Math.floor(Random.fraction() * 10) * 5;
+  };

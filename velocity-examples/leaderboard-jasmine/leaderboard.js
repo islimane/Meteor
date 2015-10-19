@@ -35,20 +35,6 @@ PlayersService = {
   },
   playersExist: function () {
     return Players.find().count() > 0;
-  },
-  generateRandomPlayers: function () {
-    var names = ["Ada Lovelace",
-                 "Grace Hopper",
-                 "Marie Curie",
-                 "Carl Friedrich Gauss",
-                 "Nikola Tesla",
-                 "Claude Shannon"];
-    for (var i = 0; i < names.length; i++) {
-      Players.insert({name: names[i], score: this._randomScore()});
-    }
-  },
-  _randomScore: function () {
-    return Math.floor(Random.fraction() * 10) * 5
   }
 };
 
@@ -98,10 +84,6 @@ if (Meteor.isClient) {
 // On server startup, create some players if the database is empty.
 if (Meteor.isServer) {
   Meteor.startup(function () {
-    if (!PlayersService.playersExist()) {
-      PlayersService.generateRandomPlayers();
-    }
-
     Meteor.publish('players', function(){
       return Players.find();
     });
