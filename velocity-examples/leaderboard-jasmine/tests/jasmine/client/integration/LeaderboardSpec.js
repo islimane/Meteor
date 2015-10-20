@@ -12,6 +12,26 @@ var unselectPlayer = function () {
 
 describe("Test Leaderbord functionality", function () {
 
+  beforeAll(function (done) {
+    Meteor.call('clearDB', function () {
+      Meteor.call('loadFixtures', function(){
+        done();
+      });
+    });
+  });
+
+  beforeEach(function (done) {
+    Meteor.loginWithPassword("pepe@gmail.com", "123456", function(err){
+      Tracker.afterFlush(done);
+    });
+  });
+
+  afterEach(function (done){
+    Meteor.logout(function() {
+      Tracker.afterFlush(done);
+    });
+  });
+
   describe("Selecting Grace Hopper", function () {
     beforeEach(function (done) {
       Meteor.autorun(function (c) {
