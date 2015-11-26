@@ -9,6 +9,7 @@ Players = new Meteor.Collection("players");
  */
 PlayersService = {
   getPlayerList: function (currenUserId) {
+    console.log("getPlayerList");
     return Players.find({createdBy: currenUserId}, {sort: {score: -1, name: 1}});
   },
   getPlayer: function (playerId) {

@@ -76,6 +76,8 @@ describe("Test Leaderbord functionality", function () {
   describe("Player Ordering", function () {
     it("should result in a list where the first player has as many or more points than the second player", function () {
       var players = PlayersService.getPlayerList().fetch();
+      console.log("Players: '" + players + "'");
+      console.log("currentUserId: " + Meteor.userId());
       expect(players[0].score >= players[1].score).toBe(true);
     });
   });
